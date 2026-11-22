@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KS3 Computing Quiz: Programming in Python (Pages 66–77)</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --correct-bg: #dcfce7;
+      --correct-border: #16a34a;
+      --correct-text: #14532d;
+      --wrong-bg: #fee2e2;
+      --wrong-border: #dc2626;
+      --wrong-text: #7f1d1d;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .app-container {
+      background: var(--card);
+      width: 100%;
+      max-width: 720px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+      padding: 32px;
+      border: 1px solid var(--border);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .title-group h1 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .title-group p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .score-badge {
+      background: #eff6ff;
+      color: var(--primary);
+      font-weight: 700;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+    .progress-bar-container {
+      width: 100%;
+      height: 8px;
+      background: #e2e8f0;
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .topic-tag {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      border-radius: 6px;
+      color: #334155;
+    }
+
+    .question-text {
+      font-size: 1.2rem;
+      font-weight: 600;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.92em;
+      color: #0f172a;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      padding: 15px 18px;
+      background: #ffffff;
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem;
+      color: var(--text);
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: #f8fafc;
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-letter {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: #f1f5f9;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+
+    .option-btn.correct {
+      background: var(--correct-bg);
+      border-color: var(--correct-border);
+      color: var(--correct-text);
+    }
+
+    .option-btn.correct .option-letter {
+      background: var(--correct-border);
+      color: #ffffff;
+    }
+
+    .option-btn.wrong {
+      background: var(--wrong-bg);
+      border-color: var(--wrong-border);
+      color: var(--wrong-text);
+    }
+
+    .option-btn.wrong .option-letter {
+      background: var(--wrong-border);
+      color: #ffffff;
+    }
+
+    .feedback-box {
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      display: none;
+    }
+
+    .feedback-box.correct {
+      display: block;
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      color: #166534;
+    }
+
+    .feedback-box.wrong {
+      display: block;
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #991b1b;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .btn {
+      padding: 12px 22px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: background 0.15s ease;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+
+    .btn-primary:disabled {
+      background: #94a3b8;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #334155;
+    }
+
+    .btn-secondary:hover {
+      background: #cbd5e1;
+    }
+
+    .results-container {
+      text-align: center;
+      display: none;
+    }
+
+    .results-container h2 {
+      font-size: 1.75rem;
+      margin-bottom: 8px;
+    }
+
+    .final-score {
+      font-size: 3rem;
+      font-weight: 800;
+      color: var(--primary);
+      margin: 16px 0;
+    }
+
+    .review-list {
+      text-align: left;
+      margin-top: 28px;
+      max-height: 360px;
+      overflow-y: auto;
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .review-item {
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .review-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .tag-pass {
+      color: #16a34a;
+      font-weight: 700;
+    }
+
+    .tag-fail {
+      color: #dc2626;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+<div class="app-container">
+  <!-- Quiz View -->
+  <div id="quiz-view">
+    <div class="header">
+      <div class="title-group">
+        <h1>KS3 Computing: Programming in Python</h1>
+        <p>Chapter 6 Revision Quiz (Pages 66–77)</p>
+      </div>
+      <div class="score-badge" id="score-display">Score: 0 / 30</div>
+    </div>
+
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress-bar"></div>
+    </div>
+
+    <div class="meta-row">
+      <span id="question-counter">Question 1 of 30</span>
+      <span class="topic-tag" id="topic-tag">Topic</span>
+    </div>
+
+    <div class="question-text" id="question-text">Loading question...</div>
+
+    <div class="options-list" id="options-list"></div>
+
+    <div class="feedback-box" id="feedback-box"></div>
+
+    <div class="controls">
+      <button class="btn btn-secondary" onclick="restartQuiz()">Restart</button>
+      <button class="btn btn-primary" id="next-btn" onclick="nextQuestion()" disabled>Next Question &rarr;</button>
+    </div>
+  </div>
+
+  <!-- Results View -->
+  <div class="results-container" id="results-view">
+    <h2>Quiz Complete!</h2>
+    <p style="color: var(--muted);">Progress in Computing KS3 — Pages 66–77</p>
+    <div class="final-score" id="final-score">0 / 30</div>
+    <p id="performance-msg" style="margin-bottom: 20px; font-weight: 500;"></p>
+    <button class="btn btn-primary" onclick="restartQuiz()">Try Again</button>
+
+    <div class="review-list" id="review-list"></div>
+  </div>
+</div>
+
+<script>
+  const questions = [
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "What type of programming language is Python compared to Scratch?",
+      options: [
+        "A block-based visual language",
+        "A text-based high-level programming language",
+        "Machine code written only in 1s and 0s",
+        "A spreadsheet formula language"
+      ],
+      answer: 1,
+      explanation: "Python is a text-based, high-level programming language where instructions are typed using English-like keywords and strict syntax."
+    },
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "What is 'IDLE' in Python programming?",
+      options: [
+        "An Integrated Development and Learning Environment used to write, edit, and run Python programs",
+        "A command that pauses a program forever",
+        "A type of syntax error",
+        "A hardware port on a Raspberry Pi"
+      ],
+      answer: 0,
+      explanation: "IDLE is Python's built-in Integrated Development Environment, featuring an interactive Shell and a script Editor."
+    },
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "What is the difference between Python's 'Interactive Mode' (Shell) and 'Script Mode' (Editor)?",
+      options: [
+        "Interactive mode runs one line at a time immediately; Script mode lets you write, save (.py), and run full multi-line programs",
+        "Interactive mode only works offline; Script mode requires Wi-Fi",
+        "Script mode cannot display text on screen",
+        "There is no difference between them"
+      ],
+      answer: 0,
+      explanation: "The Shell executes single commands immediately, whereas the Editor lets you write and save complete programs as .py files."
+    },
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "Which Python function is used to display text or values on the screen?",
+      options: [
+        "display()",
+        "show()",
+        "print()",
+        "output()"
+      ],
+      answer: 2,
+      explanation: "The print() function outputs text, numbers, or variable values to the screen."
+    },
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "Why does the code <code>Print(\"Hello\")</code> cause an error in Python?",
+      options: [
+        "Because Python is case-sensitive and built-in functions like <code>print()</code> must be written in lowercase",
+        "Because 'Hello' is too short",
+        "Because Python does not allow double quotation marks",
+        "Because numbers must always be printed first"
+      ],
+      answer: 0,
+      explanation: "Python is strictly case-sensitive; writing Print with a capital P triggers a NameError."
+    },
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "What is a 'syntax error' in Python?",
+      options: [
+        "A mistake in the spelling, punctuation, brackets, or grammar rules of the programming language that prevents the code from running",
+        "When the computer runs out of battery",
+        "When a program runs smoothly but gives the wrong answer",
+        "A comment added by a programmer"
+      ],
+      answer: 0,
+      explanation: "A syntax error occurs when code breaks Python's grammar rules (such as a missing bracket or unclosed quote)."
+    },
+    {
+      topic: "6.1 Getting Started with Python (Pages 66–67)",
+      question: "Which symbol is used to add a 'comment' in Python that the computer ignores when running the code?",
+      options: [
+        "//",
+        "#",
+        "/*",
+        "--"
+      ],
+      answer: 1,
+      explanation: "Anything following a hash symbol (#) on a line is treated as a human-readable comment and ignored by Python."
+    },
+    {
+      topic: "6.2 Variables & User Input (Pages 68–69)",
+      question: "Which Python code correctly stores the text 'Alex' in a variable called <code>name</code>?",
+      options: [
+        "name == Alex",
+        "name = \"Alex\"",
+        "\"Alex\" = name",
+        "var name : Alex"
+      ],
+      answer: 1,
+      explanation: "A single equals sign (=) is the assignment operator, storing the string \"Alex\" into the variable name."
+    },
+    {
+      topic: "6.2 Variables & User Input (Pages 68–69)",
+      question: "Which rule applies to naming variables in Python?",
+      options: [
+        "Variable names can contain spaces and start with a number (e.g., 1st score)",
+        "Variable names cannot contain spaces, cannot start with a number, and should use descriptive names (e.g., high_score)",
+        "Variable names must always be a single capital letter",
+        "Variable names must be enclosed in quotation marks"
+      ],
+      answer: 1,
+      explanation: "Python variable names must start with a letter or underscore, contain no spaces, and avoid reserved keywords."
+    },
+    {
+      topic: "6.2 Variables & User Input (Pages 68–69)",
+      question: "Which function is used in Python to ask the user to type something using the keyboard?",
+      options: [
+        "ask()",
+        "read()",
+        "input()",
+        "type()"
+      ],
+      answer: 2,
+      explanation: "The input() function displays a prompt, pauses the program, and captures whatever the user types."
+    },
+    {
+      topic: "6.2 Variables & User Input (Pages 68–69)",
+      question: "What data type does Python's <code>input()</code> function ALWAYS return by default?",
+      options: [
+        "Integer (whole number)",
+        "Float (decimal number)",
+        "String (text)",
+        "Boolean (True/False)"
+      ],
+      answer: 2,
+      explanation: "By default, input() always returns user input as a string (str), even if the user types digits."
+    },
+    {
+      topic: "6.3 Data Types & Casting (Pages 70–71)",
+      question: "Which of the following correctly matches Python's four basic data types?",
+      options: [
+        "int (whole number), float (decimal number), str (text), bool (True/False)",
+        "int (text), float (True/False), str (whole number), bool (decimal)",
+        "int (image), float (sound), str (video), bool (folder)",
+        "int (loop), float (variable), str (function), bool (error)"
+      ],
+      answer: 0,
+      explanation: "Python uses int for integers, float for floating-point decimals, str for strings of text, and bool for Booleans."
+    },
+    {
+      topic: "6.3 Data Types & Casting (Pages 70–71)",
+      question: "What is 'casting' (type conversion) in Python?",
+      options: [
+        "Converting a value from one data type to another, such as using <code>int()</code> or <code>str()</code>",
+        "Printing a message onto a projector screen",
+        "Deleting a variable from memory",
+        "Repeating a loop 10 times"
+      ],
+      answer: 0,
+      explanation: "Casting converts data between types—for example, int(input(\"Enter age: \")) converts text input into an integer so maths can be done on it."
+    },
+    {
+      topic: "6.3 Data Types & Casting (Pages 70–71)",
+      question: "What will <code>print(\"5\" + \"3\")</code> output in Python?",
+      options: [
+        "8",
+        "53",
+        "15",
+        "SyntaxError"
+      ],
+      answer: 1,
+      explanation: "Because \"5\" and \"3\" are in quotes, they are strings; the + operator concatenates (joins) them together into \"53\"."
+    },
+    {
+      topic: "6.3 Data Types & Casting (Pages 70–71)",
+      question: "Which Python arithmetic operator is used for multiplication, and which is used for division?",
+      options: [
+        "x for multiplication and ÷ for division",
+        "* for multiplication and / for division",
+        "^ for multiplication and \\ for division",
+        "# for multiplication and % for division"
+      ],
+      answer: 1,
+      explanation: "Python uses * for multiplication and / for standard division."
+    },
+    {
+      topic: "6.4 Selection: if, elif, else (Pages 72–73)",
+      question: "What punctuation mark MUST appear at the end of an <code>if</code>, <code>elif</code>, or <code>else</code> line in Python?",
+      options: [
+        "A semicolon (;)",
+        "A colon (:)",
+        "A full stop (.)",
+        "A question mark (?)"
+      ],
+      answer: 1,
+      explanation: "Every if, elif, and else header in Python must end with a colon (:) to introduce an indented block of code."
+    },
+    {
+      topic: "6.4 Selection: if, elif, else (Pages 72–73)",
+      question: "How does Python know which lines of code belong inside an <code>if</code> statement or loop?",
+      options: [
+        "By putting curly brackets { } around them",
+        "By indentation (spaces/tab at the start of the line)",
+        "By writing END IF at the bottom",
+        "By typing them in capital letters"
+      ],
+      answer: 1,
+      explanation: "Python uses indentation (typically 4 spaces) to define code blocks inside selection and iteration structures."
+    },
+    {
+      topic: "6.4 Selection: if, elif, else (Pages 72–73)",
+      question: "Which comparison operator checks whether two values are equal in a Python <code>if</code> condition?",
+      options: [
+        "=",
+        "==",
+        "!=",
+        "<>"
+      ],
+      answer: 1,
+      explanation: "Double equals (==) tests for equality, whereas a single equals (=) assigns a value to a variable."
+    },
+    {
+      topic: "6.4 Selection: if, elif, else (Pages 72–73)",
+      question: "Which comparison operator means 'not equal to' in Python?",
+      options: [
+        "<>",
+        "!=",
+        "==",
+        "not="
+      ],
+      answer: 1,
+      explanation: "Python uses != to check if two values are not equal."
+    },
+    {
+      topic: "6.4 Selection: if, elif, else (Pages 72–73)",
+      question: "What does the keyword <code>elif</code> stand for and do in Python?",
+      options: [
+        "'End loop if' — it stops the program immediately",
+        "'Else if' — it checks another condition if the previous <code>if</code> or <code>elif</code> conditions were False",
+        "'Element if' — it creates a list of numbers",
+        "'Error life' — it fixes syntax errors"
+      ],
+      answer: 1,
+      explanation: "elif ('else if') allows you to test multiple mutually exclusive conditions in sequence."
+    },
+    {
+      topic: "6.5 Iteration: while & for Loops (Pages 74–75)",
+      question: "What is the difference between a <code>for</code> loop and a <code>while</code> loop in Python?",
+      options: [
+        "A <code>for</code> loop is count-controlled (repeats a known number of times); a <code>while</code> loop is condition-controlled (repeats as long as a condition remains True)",
+        "A <code>for</code> loop only works with text; a <code>while</code> loop only works with numbers",
+        "A <code>while</code> loop runs exactly once; a <code>for</code> loop runs forever",
+        "There is no difference between them"
+      ],
+      answer: 0,
+      explanation: "for loops iterate a set number of times (e.g., using range()), whereas while loops repeat until a condition becomes False."
+    },
+    {
+      topic: "6.5 Iteration: while & for Loops (Pages 74–75)",
+      question: "How many times will the code inside <code>for i in range(5):</code> repeat?",
+      options: [
+        "4 times (0, 1, 2, 3)",
+        "5 times (0, 1, 2, 3, 4)",
+        "6 times (0, 1, 2, 3, 4, 5)",
+        "Forever"
+      ],
+      answer: 1,
+      explanation: "range(5) generates 5 numbers starting from 0 up to 4 (0, 1, 2, 3, 4), so the loop executes 5 times."
+    },
+    {
+      topic: "6.5 Iteration: while & for Loops (Pages 74–75)",
+      question: "What happens if the condition in a <code>while</code> loop never becomes False (for example, <code>while True:</code> with no break)?",
+      options: [
+        "The loop is skipped completely",
+        "It creates an infinite loop that keeps running until interrupted",
+        "Python automatically stops it after 10 cycles",
+        "It deletes the Python file"
+      ],
+      answer: 1,
+      explanation: "If a while condition always evaluates to True, the program enters an infinite loop."
+    },
+    {
+      topic: "6.5 Iteration: while & for Loops (Pages 74–75)",
+      question: "What will the following Python code output?<br><code>for count in range(1, 4):<br>&nbsp;&nbsp;&nbsp;&nbsp;print(count)</code>",
+      options: [
+        "1, 2, 3, 4",
+        "1, 2, 3",
+        "0, 1, 2, 3",
+        "2, 3, 4"
+      ],
+      answer: 1,
+      explanation: "range(1, 4) starts at 1 and stops just before 4, outputting 1, 2, and 3."
+    },
+    {
+      topic: "6.6 Turtle Graphics & Modules (Pages 76–77)",
+      question: "Which Python statement loads the Turtle graphics library so you can draw shapes on screen?",
+      options: [
+        "open turtle",
+        "import turtle",
+        "include graphics",
+        "load pen"
+      ],
+      answer: 1,
+      explanation: "The import keyword loads external modules/libraries such as import turtle or import random."
+    },
+    {
+      topic: "6.6 Turtle Graphics & Modules (Pages 76–77)",
+      question: "In Python Turtle graphics, what do <code>turtle.penup()</code> and <code>turtle.pendown()</code> do?",
+      options: [
+        "penup() lifts the pen so the turtle moves without drawing a line; pendown() lowers it so movement draws a line again",
+        "penup() changes the background colour; pendown() closes the window",
+        "penup() increases speed; pendown() stops the turtle",
+        "penup() deletes the drawing; pendown() saves it"
+      ],
+      answer: 0,
+      explanation: "penup() stops the turtle from leaving a trail when moving to a new position, and pendown() resumes drawing."
+    },
+    {
+      topic: "6.6 Turtle Graphics & Modules (Pages 76–77)",
+      question: "To draw an equilateral triangle using a <code>for</code> loop in Python Turtle, what angle must the turtle turn at each of the 3 corners?",
+      options: [
+        "60 degrees",
+        "90 degrees",
+        "120 degrees",
+        "180 degrees"
+      ],
+      answer: 2,
+      explanation: "The exterior turning angle of a regular polygon is 360° ÷ number of sides: 360° ÷ 3 = 120°."
+    },
+    {
+      topic: "6.6 Testing & Debugging Python (Pages 76–77)",
+      question: "What is a 'logic error' in a Python program?",
+      options: [
+        "When Python highlights a red syntax error before running",
+        "When the program runs without crashing, but produces unexpected or incorrect results (e.g., turning 60° instead of 120°)",
+        "When the keyboard is unplugged",
+        "When you forget to save the file"
+      ],
+      answer: 1,
+      explanation: "Logic errors follow valid Python syntax so the program runs, but the output is wrong due to a mistake in the algorithm."
+    },
+    {
+      topic: "6.6 Testing & Debugging Python (Pages 76–77)",
+      question: "Which module would you import in Python to generate random numbers (for example, in a dice or guessing game)?",
+      options: [
+        "import random",
+        "import math",
+        "import time",
+        "import dice"
+      ],
+      answer: 0,
+      explanation: "import random provides functions like random.randint(1, 6) to generate random numbers."
+    },
+    {
+      topic: "6.6 Summary of Python Constructs (Pages 66–77)",
+      question: "Which three fundamental programming constructs are used to build any Python algorithm?",
+      options: [
+        "Sequence, Selection, and Iteration",
+        "Hardware, Software, and Peripherals",
+        "Input, Monitor, and Printer",
+        "Variables, Comments, and Fonts"
+      ],
+      answer: 0,
+      explanation: "Sequence (step-by-step order), Selection (if/elif/else decisions), and Iteration (for/while loops) are the three core constructs."
+    }
+  ];
+
+  let currentIndex = 0;
+  let score = 0;
+  let userAnswers = [];
+
+  const questionCounterEl = document.getElementById("question-counter");
+  const topicTagEl = document.getElementById("topic-tag");
+  const questionTextEl = document.getElementById("question-text");
+  const optionsListEl = document.getElementById("options-list");
+  const feedbackBoxEl = document.getElementById("feedback-box");
+  const nextBtnEl = document.getElementById("next-btn");
+  const scoreDisplayEl = document.getElementById("score-display");
+  const progressBarEl = document.getElementById("progress-bar");
+  const quizViewEl = document.getElementById("quiz-view");
+  const resultsViewEl = document.getElementById("results-view");
+
+  function loadQuestion() {
+    const q = questions[currentIndex];
+    questionCounterEl.textContent = `Question ${currentIndex + 1} of ${questions.length}`;
+    topicTagEl.textContent = q.topic;
+    questionTextEl.innerHTML = q.question;
+    progressBarEl.style.width = `${(currentIndex / questions.length) * 100}%`;
+
+    feedbackBoxEl.className = "feedback-box";
+    feedbackBoxEl.textContent = "";
+    nextBtnEl.disabled = true;
+    nextBtnEl.textContent = currentIndex === questions.length - 1 ? "Finish Quiz" : "Next Question →";
+
+    optionsListEl.innerHTML = "";
+    const letters = ["A", "B", "C", "D"];
+
+    q.options.forEach((optionText, idx) => {
+      const btn = document.createElement("button");
+      btn.className = "option-btn";
+      btn.innerHTML = `<span class="option-letter">${letters[idx]}</span><span>${optionText}</span>`;
+      btn.onclick = () => selectOption(idx);
+      optionsListEl.appendChild(btn);
+    });
+  }
+
+  function selectOption(selectedIdx) {
+    const q = questions[currentIndex];
+    const buttons = optionsListEl.querySelectorAll(".option-btn");
+    const isCorrect = selectedIdx === q.answer;
+
+    buttons.forEach((btn, idx) => {
+      btn.disabled = true;
+      if (idx === q.answer) {
+        btn.classList.add("correct");
+      } else if (idx === selectedIdx && !isCorrect) {
+        btn.classList.add("wrong");
+      }
+    });
+
+    if (isCorrect) {
+      score++;
+      scoreDisplayEl.textContent = `Score: ${score} / ${questions.length}`;
+      feedbackBoxEl.className = "feedback-box correct";
+      feedbackBoxEl.innerHTML = `<strong>Correct!</strong> ${q.explanation}`;
+    } else {
+      feedbackBoxEl.className = "feedback-box wrong";
+      feedbackBoxEl.innerHTML = `<strong>Incorrect.</strong> ${q.explanation}`;
+    }
+
+    userAnswers.push({
+      question: q.question,
+      selected: q.options[selectedIdx],
+      correct: q.options[q.answer],
+      isCorrect: isCorrect
+    });
+
+    nextBtnEl.disabled = false;
+  }
+
+  function nextQuestion() {
+    currentIndex++;
+    if (currentIndex < questions.length) {
+      loadQuestion();
+    } else {
+      showResults();
+    }
+  }
+
+  function showResults() {
+    progressBarEl.style.width = "100%";
+    quizViewEl.style.display = "none";
+    resultsViewEl.style.display = "block";
+
+    document.getElementById("final-score").textContent = `${score} / ${questions.length}`;
+
+    const percentage = Math.round((score / questions.length) * 100);
+    let msg = "";
+    if (percentage >= 85) {
+      msg = `Outstanding (${percentage}%)! You've mastered Programming in Python.`;
+    } else if (percentage >= 60) {
+      msg = `Good effort (${percentage}%)! Review the missed questions below to hit 100%.`;
+    } else {
+      msg = `You scored ${percentage}%. Review pages 66–77 and try again!`;
+    }
+    document.getElementById("performance-msg").textContent = msg;
+
+    const reviewListEl = document.getElementById("review-list");
+    reviewListEl.innerHTML = "<h3 style='margin-bottom:12px;'>Question Review</h3>";
+
+    userAnswers.forEach((item, index) => {
+      const div = document.createElement("div");
+      div.className = "review-item";
+      div.innerHTML = `
+        <strong>Q${index + 1}: ${item.question}</strong>
+        <span class="${item.isCorrect ? "tag-pass" : "tag-fail"}">
+          ${item.isCorrect ? "✓ Correct" : "✗ Your answer: " + item.selected}
+        </span>
+        ${!item.isCorrect ? `<br><span style="color:#334155;">Correct answer: <b>${item.correct}</b></span>` : ""}
+      `;
+      reviewListEl.appendChild(div);
+    });
+  }
+
+  function restartQuiz() {
+    currentIndex = 0;
+    score = 0;
+    userAnswers = [];
+    scoreDisplayEl.textContent = `Score: 0 / ${questions.length}`;
+    resultsViewEl.style.display = "none";
+    quizViewEl.style.display = "block";
+    loadQuestion();
+  }
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
